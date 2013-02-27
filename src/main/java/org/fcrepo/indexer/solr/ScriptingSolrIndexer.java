@@ -7,6 +7,7 @@ import org.apache.abdera.parser.Parser;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrInputDocument;
 import org.fcrepo.indexer.solr.ScriptIndexer;
 
 import javax.inject.Inject;
@@ -40,9 +41,10 @@ public class ScriptingSolrIndexer implements MessageListener {
                 if ("purgeObject".equals(entry.getTitle())) {
                     solrServer.deleteById(pid);
                 } else {
-                    SolrDocument d = new SolrDocument();
+                    SolrInputDocument d = new SolrInputDocument();
                     d.addField("id", pid);
                     indexer.indexObject(pid, d);
+                    solrServer.add(d);
                 }
             }
         } catch (JMSException e) {
@@ -52,5 +54,9 @@ public class ScriptingSolrIndexer implements MessageListener {
         } catch (SolrServerException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    public void setSolrServer(SolrServer solrServer) {
+        this.solrServer = solrServer;
     }
 }
