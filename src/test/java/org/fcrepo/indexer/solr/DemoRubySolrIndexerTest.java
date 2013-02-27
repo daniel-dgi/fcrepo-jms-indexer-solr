@@ -6,6 +6,10 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.SolrInputField;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +26,9 @@ import javax.jms.Message;
 import javax.jms.Session;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static org.apache.abdera.model.Text.Type.TEXT;
@@ -83,7 +90,7 @@ public class DemoRubySolrIndexerTest {
         doc.addField("ruby-indexer", "was-here");
         indexer.setSolrServer(s);
         indexer.onMessage(m);
-        verify(s).add(eq(doc));
+        verify(s).add(argThat(new MatchesSolrDocument(doc)));
     }
 
 
@@ -102,4 +109,56 @@ public class DemoRubySolrIndexerTest {
         connection.close();
     }
 
+    private class MatchesSolrDocument extends BaseMatcher<SolrInputDocument> {
+        private final SolrInputDocument source_doc;
+
+        public MatchesSolrDocument(SolrInputDocument doc) {
+            this.source_doc = doc;
+        }
+
+        @Override
+        public boolean matches(Object o) {
+            final SolrInputDocument test_doc = (SolrInputDocument) o;
+
+            final Iterator<SolrInputField> it = source_doc.iterator();
+
+            while(it.hasNext()) {
+                final SolrInputField source_field = it.next();
+                final SolrInputField test_field = test_doc.getField(source_field.getName());
+
+                Collection<String> source_values = new ArrayList<String>();
+                Collection<String> test_values = new ArrayList<String>();
+
+
+                final Iterator<Object> fieldIterator = source_field.getValues().iterator();
+
+                while(fieldIterator.hasNext()) {
+                    source_values.add((String)fieldIterator.next());
+                }
+
+                final Iterator<Object> testFieldIterator = test_field.getValues().iterator();
+
+                while(testFieldIterator.hasNext()) {
+                    test_values.add((String)testFieldIterator.next());
+                }
+
+
+                if(!test_values.containsAll(source_values)) {
+                    System.out.println(source_field.getName() + " did not match!");
+                    System.out.println("Source:" + source_values.toString());
+                    System.out.println("Test:" + test_values.toString());
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        @Override
+        public void describeTo(Description description) {
+
+            description.appendValue(source_doc);
+        }
+    }
 }
