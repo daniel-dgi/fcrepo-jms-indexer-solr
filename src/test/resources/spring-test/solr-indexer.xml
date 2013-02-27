@@ -20,6 +20,10 @@
 
   </bean>
 
+  <bean class="org.fcrepo.indexer.RepositoryProfile">
+    <property name="repositoryURL" value="http://localhost:8080/rest" />
+  </bean>
+
   <lang:jruby id="rubyScriptClass" script-interfaces="org.fcrepo.indexer.solr.ScriptIndexer" script-source="classpath:demo_ruby_solr_indexer.rb" />
 
   <!-- this is the Message Driven POJO (MDP) -->

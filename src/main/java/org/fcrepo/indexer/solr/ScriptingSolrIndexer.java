@@ -8,6 +8,7 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
+import org.fcrepo.indexer.RepositoryProfile;
 import org.fcrepo.indexer.solr.ScriptIndexer;
 
 import javax.inject.Inject;
@@ -27,6 +28,9 @@ public class ScriptingSolrIndexer implements MessageListener {
     @Inject
     private ScriptIndexer indexer;
 
+    @Inject
+    private RepositoryProfile profile;
+
     public void onMessage(Message message) {
 
         try {
@@ -43,7 +47,7 @@ public class ScriptingSolrIndexer implements MessageListener {
                 } else {
                     SolrInputDocument d = new SolrInputDocument();
                     d.addField("id", pid);
-                    indexer.indexObject(pid, d);
+                    indexer.indexObject(profile, pid, d);
                     solrServer.add(d);
                 }
             }

@@ -94,7 +94,7 @@ public class DemoRubySolrIndexerTest {
 
         SolrInputDocument doc = new SolrInputDocument();
         doc.addField("id", TEST_PID);
-        doc.addField("ruby-indexer", "was-here");
+        doc.addField("__org.fcrepo.indexer.solr.class__", "DemoRubySolrIndexer");
         indexer.setSolrServer(s);
         indexer.onMessage(m);
         verify(s).add(argThat(new MatchesSolrDocument(doc)));
