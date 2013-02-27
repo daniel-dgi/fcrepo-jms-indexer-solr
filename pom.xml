@@ -7,6 +7,14 @@
     <groupId>fcrepo-jms-indexer-solr</groupId>
     <artifactId>fcrepo-jms-indexer-solr</artifactId>
     <version>4.0-SNAPSHOT</version>
+
+  <parent>
+    <groupId>org.fcrepo</groupId>
+    <artifactId>fcrepo</artifactId>
+    <version>4.0-SNAPSHOT</version>
+  </parent>
+
+
   <properties>
 
     <solr.version>4.1.0</solr.version>
@@ -97,13 +105,40 @@
       <groupId>org.apache.abdera</groupId>
       <artifactId>abdera-core</artifactId>
       <version>${abdera.version}</version>
+
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.abdera</groupId>
       <artifactId>abdera-parser</artifactId>
       <version>${abdera.version}</version>
+
+      <exclusions>
+        <exclusion>
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-legacy-api</artifactId>
+      <version>4.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.fcrepo</groupId>
+      <artifactId>fcrepo-jms</artifactId>
+      <version>4.0-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby-complete</artifactId>
@@ -126,6 +161,18 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava-collections</artifactId>
       <version>r03</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http-jetty</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-extension-providers</artifactId>
     </dependency>
   </dependencies>
 
