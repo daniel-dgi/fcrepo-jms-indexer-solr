@@ -2,8 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:lang="http://www.springframework.org/schema/lang"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd
        ">
 
   <context:property-placeholder/>
@@ -13,9 +15,15 @@
 
   <context:annotation-config/>
 
-  <!-- this is the Message Driven POJO (MDP) -->
-  <bean id="solrIndexer" class="org.fcrepo.indexer.ScriptingSolrIndexer" />
+  <bean class="org.apache.solr.client.solrj.impl.HttpSolrServer">
+    <constructor-arg value="http://localhost:8983/solr" />
 
+  </bean>
+
+  <lang:jruby id="rubyScriptClass" script-interfaces="org.fcrepo.indexer.solr.ScriptIndexer" script-source="classpath:demo_ruby_solr_indexer.rb" />
+
+  <!-- this is the Message Driven POJO (MDP) -->
+  <bean id="solrIndexer" class="org.fcrepo.indexer.solr.ScriptingSolrIndexer" />
 
   <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
     <property name="brokerURL" value="tcp://localhost:61616"/>

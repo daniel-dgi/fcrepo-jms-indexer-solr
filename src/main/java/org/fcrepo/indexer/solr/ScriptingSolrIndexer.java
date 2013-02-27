@@ -1,13 +1,13 @@
-package org.fcrepo.indexer;
+package org.fcrepo.indexer.solr;
 
 import org.apache.abdera.Abdera;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.parser.Parser;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrDocument;
+import org.fcrepo.indexer.solr.ScriptIndexer;
 
 import javax.inject.Inject;
 import javax.jms.JMSException;
@@ -21,8 +21,10 @@ public class ScriptingSolrIndexer implements MessageListener {
     @Inject
     private SolrServer solrServer;
 
-
     private Parser abderaParser = new Abdera().getParser();
+
+    @Inject
+    private ScriptIndexer indexer;
 
     public void onMessage(Message message) {
 
@@ -37,6 +39,10 @@ public class ScriptingSolrIndexer implements MessageListener {
 
                 if ("purgeObject".equals(entry.getTitle())) {
                     solrServer.deleteById(pid);
+                } else {
+                    SolrDocument d = new SolrDocument();
+                    d.addField("id", pid);
+                    indexer.indexObject(pid, d);
                 }
             }
         } catch (JMSException e) {

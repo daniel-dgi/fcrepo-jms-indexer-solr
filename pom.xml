@@ -103,7 +103,26 @@
       <artifactId>abdera-parser</artifactId>
       <version>${abdera.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.jruby</groupId>
+      <artifactId>jruby-complete</artifactId>
+      <version>1.7.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <!-- Explicitly adds src/main/ruby as a resource directory so that
+           Ruby classes are available on the classpath -->
+      <resource>
+        <directory>src/main/ruby</directory>
+      </resource>
+    </resources>
+  </build>
 
 </project>
