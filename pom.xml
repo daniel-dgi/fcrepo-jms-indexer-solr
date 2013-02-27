@@ -14,6 +14,12 @@
     <version>4.0-SNAPSHOT</version>
   </parent>
 
+  <repositories>
+    <repository>
+      <id>rubygems-release</id>
+      <url>http://rubygems-proxy.torquebox.org/releases</url>
+    </repository>
+  </repositories>
 
   <properties>
 
@@ -174,6 +180,31 @@
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-rs-extension-providers</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>rubydora</artifactId>
+      <version>1.4.0</version>
+      <type>gem</type>
+
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>mediashelf-loggable</artifactId>
+      <version>0.4.9</version>
+      <type>gem</type>
+
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.10.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -187,6 +218,20 @@
         <directory>src/main/ruby</directory>
       </resource>
     </resources>
+    <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>0.29.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>initialize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

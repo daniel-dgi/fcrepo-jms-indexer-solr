@@ -75,7 +75,7 @@ public class DemoRubySolrIndexerTest {
     @Inject
     private ActiveMQConnectionFactory connectionFactory;
 
-    private static String TEST_PID = "changeme:1001";
+    private static String TEST_PID = "changeme_1001";
 
     @Inject
     private ScriptingSolrIndexer indexer;
@@ -147,6 +147,9 @@ public class DemoRubySolrIndexerTest {
         SolrInputDocument doc = new SolrInputDocument();
         doc.addField("id", "IndexingIntegrationTestObject1");
         doc.addField("__org.fcrepo.indexer.solr.class__", "DemoRubySolrIndexer");
+        doc.addField("objOwnerId", "<anonymous>");
+        doc.addField("objState", "A");
+        doc.addField("objSize", "393");
 
         verify(s, timeout(5000)).add(argThat(new MatchesSolrDocument(doc)));
     }
@@ -181,8 +184,10 @@ public class DemoRubySolrIndexerTest {
                     new Predicate<SolrInputField>() {
 
                         public boolean apply(SolrInputField f) {
-                            return ((SolrInputDocument) o)
-                                    .getField(f.getName()).getValues()
+                            SolrInputDocument test_doc = ((SolrInputDocument) o);
+
+                            return test_doc.getField(f.getName()) != null &&
+                                    test_doc.getField(f.getName()).getValues()
                                     .containsAll(f.getValues());
                         }
                     });
