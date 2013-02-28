@@ -147,10 +147,7 @@ public class DemoRubySolrIndexerTest {
         SolrInputDocument doc = new SolrInputDocument();
         doc.addField("id", "IndexingIntegrationTestObject1");
         doc.addField("__org.fcrepo.indexer.solr.class__", "DemoRubySolrIndexer");
-        doc.addField("objOwnerId", "<anonymous>");
-        doc.addField("objState", "A");
-        doc.addField("objSize", "393");
-
+        doc.addField("active_fedora_model_s", "ActiveFedora::Base");
         verify(s, timeout(5000)).add(argThat(new MatchesSolrDocument(doc)));
     }
 
